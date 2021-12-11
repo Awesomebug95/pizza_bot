@@ -17,7 +17,26 @@ class Matter(object):
 
 
 lump = Matter()
-machine = Machine(lump, ['none', 'get_size', 'get_payment', 'get_confirm'], initial='none')
-machine.add_transition('pizza_size', 'none', 'get_size', before='set_size')
-machine.add_transition('payment_method', 'get_size', 'get_payment', before='set_payment_method')
-machine.add_transition('confirm_order', 'get_payment', 'get_confirm', before=None)
+machine = Machine(
+    lump,
+    ['none', 'get_size', 'get_payment', 'get_confirm'],
+    initial='none'
+)
+machine.add_transition(
+    'pizza_size',
+    'none',
+    'get_size',
+    before='set_size'
+)
+machine.add_transition(
+    'payment_method',
+    'get_size',
+    'get_payment',
+    before='set_payment_method'
+)
+machine.add_transition(
+    'confirm_order',
+    'get_payment',
+    'get_confirm',
+    before=None
+)

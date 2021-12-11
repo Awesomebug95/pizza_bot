@@ -17,24 +17,44 @@ CONFIRMATION_MESSAGE = 'Спасибо за заказ'
 
 
 @dp.message_handler(commands=['start'])
-async def start(message: types.Message):
-    await message.answer(SIZE_QUESTION)
+def start(message: types.Message):
+    return message.answer(SIZE_QUESTION)
 
 
 @dp.message_handler(content_types=["text"])
-async def order_pizza(message: types.Message):
+def order_pizza(message: types.Message):
     client_answer = message.text.lower()
+
     if client_answer in PIZZA_SIZE:
         lump.pizza_size(size=client_answer)
-        await message.answer(PAYMENT_QUESTION)
+        return message.answer(PAYMENT_QUESTION)
 
     if client_answer in TYPE_OF_PAYMENT:
         lump.payment_method(payment=client_answer)
-        await message.answer(text=lump)
+        return message.answer(text=lump)
 
     if client_answer in CONFIRM_ORDER:
         lump.confirm_order()
-        await message.answer(CONFIRMATION_MESSAGE)
+        return message.answer(CONFIRMATION_MESSAGE)
+
+# Я вынес основную логику бота в дополнительную функцию,
+# чтобы протестировать ее не применяя telethon и чтобы
+# результат тестов можно было увидеть сразу.
+
+
+def logic_of_order_pizza(client_answer):
+    client_answer = client_answer.lower()
+    if client_answer in PIZZA_SIZE:
+        lump.pizza_size(size=client_answer)
+        return PAYMENT_QUESTION
+
+    if client_answer in TYPE_OF_PAYMENT:
+        lump.payment_method(payment=client_answer)
+        return str(lump)
+
+    if client_answer in CONFIRM_ORDER:
+        lump.confirm_order()
+        return CONFIRMATION_MESSAGE
 
 
 if __name__ == '__main__':
